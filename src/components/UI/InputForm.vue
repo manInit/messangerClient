@@ -4,8 +4,8 @@
     <input
         :value="modelValue"
         @input="updateValue"
-        type="text"
         :placeholder="placeholder"
+        :type="type"
         :class="{
           'input-group_err': err
         }"
@@ -26,6 +26,10 @@ export default defineComponent({
     err: {
       type: String,
       required: false
+    },
+    type: {
+      type: String,
+      default: String
     }
   },
   methods: {

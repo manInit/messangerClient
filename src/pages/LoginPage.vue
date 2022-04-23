@@ -7,21 +7,21 @@
         <router-link class="login__link" to="/login">Вход</router-link>
       </nav>
       <form @submit.prevent>
+        <span class="err" v-if="errs">{{ errs }}</span>
         <input-form
             class="login__input"
             title="Логин"
             v-model="login"
             placeholder="Введите логин..."
-            :err="errs.login"
         />
         <input-form
             class="login__input"
             title="Пароль"
             v-model="password"
             placeholder="Введите пароль..."
-            :err="errs.password"
+            :type="'password'"
         />
-        <button-chat class="btn-submit">Войти</button-chat>
+        <button-chat @click="auth" class="btn-submit">Войти</button-chat>
       </form>
     </main>
   </div>
@@ -31,6 +31,8 @@
 import { defineComponent } from 'vue'
 import InputForm from '@/components/UI/InputForm.vue'
 import ButtonChat from '@/components/UI/ButtonChat.vue'
+import Api from '@/api'
+import type User from '@/types/User'
 
 export default defineComponent({
   name: 'LoginPage',
@@ -39,10 +41,20 @@ export default defineComponent({
     return {
       login: '',
       password: '',
-      errs: {
-        login: '',
-        password: ''
-      }
+      errs: ''
+    }
+  },
+  methods: {
+    auth() {
+      this.errs = ''
+
+      Api.login(this.login, this.password).then((data: User) => {
+        this.$store.dispatch('auth/tryLogin', data)
+        this.$router.push('/')
+      }).catch(e => {
+        this.$store.dispatch('auth/logOut')
+        this.errs = 'Неверный логин или пароль'
+      })
     }
   }
 })
@@ -59,6 +71,13 @@ h1
   justify-content: center
   align-items: center
   background: #161819
+.err
+  display: block
+  color: #C51A1A
+  text-align: center
+  margin-top: 30px
+.err-input
+  border: 1px solid #C51A1A
 main
   max-width: 500px
   color: #fff

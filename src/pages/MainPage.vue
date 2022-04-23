@@ -6,7 +6,6 @@
       :active="activeChannelId ?? false"
     />
     <chat-list
-
       :channel-name="'Личное'"
       :values="chatArr"
       :is-moderator="true"
@@ -25,7 +24,7 @@
       :chat="chat"
     />
   </main>
-
+  <extra-modal-info />
 </template>
 
 <script lang="ts">
@@ -38,10 +37,15 @@ import ChatList from '@/components/ChatList.vue'
 import ChatType from '@/types/ChatType'
 import ChatContent from '@/components/ChatContent.vue'
 import ChannelDescription from '@/components/ChannelDescription.vue'
+import ModalChat from '@/components/UI/ModalChat.vue'
+import ExtraModalInfo from '@/components/ExtraModalInfo.vue'
+import Api from '@/api'
 
 export default defineComponent({
   name: 'MainPage',
   components: {
+    ExtraModalInfo,
+    ModalChat,
     ChannelDescription,
     ChatContent,
     UserAvatar,
@@ -55,6 +59,14 @@ export default defineComponent({
     },
     activeChatId() {
       return this.$route.params.chatId ?? null
+    }
+  },
+  mounted() {
+    this.fetchChats()
+  },
+  methods: {
+    async fetchChats() {
+      const chats = await Api.getChats(this.$store.getters['auth/userToken'])
     }
   },
   data() {
@@ -89,8 +101,7 @@ export default defineComponent({
       },
       channel: {
         name: 'Название канала',
-        text: `
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."`,
+        text: `"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."`,
         url: 'http://localhost:8080/linklink'
       }
     }

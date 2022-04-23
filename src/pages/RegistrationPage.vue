@@ -16,9 +16,23 @@
         />
         <input-form
             class="login__input"
+            title="Имя"
+            v-model="name"
+            placeholder="Введите имя..."
+            :err="errs.name"
+        />
+        <input-form
+            class="login__input"
+            title="О себе"
+            v-model="about"
+            placeholder="РАсскажите о себе"
+            :err="errs.about"
+        />
+        <input-form
+            class="login__input"
             title="Пароль"
             v-model="password"
-            placeholder="Введите пароль..."
+            placeholder="Придумайте пароль..."
             :err="errs.password"
         />
         <input-form
@@ -47,7 +61,11 @@ export default defineComponent({
       login: '',
       password: '',
       checkPassword: '',
+      about: '',
+      name: '',
       errs: {
+        name: '',
+        about: '',
         login: '',
         password: '',
         checkPassword: ''
@@ -68,6 +86,7 @@ h1
   justify-content: center
   align-items: center
   background: #161819
+  padding-bottom: 50px
 main
   max-width: 500px
   color: #fff

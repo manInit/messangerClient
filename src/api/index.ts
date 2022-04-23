@@ -17,10 +17,10 @@ export default class Api {
     return res.data
   }
 
-  static async login(): Promise<User> {
+  static async login(login: string, password: string): Promise<User> {
     const res = await axios.post<User>(Api.root + '/login', {
-      login: 'user',
-      password: '123'
+      login,
+      password
     })
     return res.data
   }

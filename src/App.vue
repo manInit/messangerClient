@@ -10,10 +10,7 @@ import Api from '@/api'
 
 export default defineComponent({
   name: 'App',
-  components: { HeaderChat },
-  mounted() {
-    Api.login()
-  }
+  components: { HeaderChat }
 })
 </script>
 

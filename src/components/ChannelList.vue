@@ -1,13 +1,26 @@
 <template>
   <div>
-    <channel-item-direct
-      url="/src/assets/avatar-mock.png"
-    />
-    <channel-item
-      v-for="item in values"
-      :key="item.id"
-      :url="item.img"
-    />
+    <router-link
+      class="link"
+      to="/channel/direct"
+    >
+      <channel-item-direct
+          url="/src/assets/avatar-mock.png"
+      />
+    </router-link>
+
+    <router-link
+        class="link"
+        v-for="item in values"
+        :key="item.id"
+        :to="`/channel/${item.id}`"
+    >
+      <channel-item
+        :url="item.img"
+        :active="active === item.id.toString()"
+      />
+    </router-link>
+
     <channel-item-add
     />
   </div>
@@ -24,7 +37,11 @@ export default defineComponent({
   components: {ChannelItemAdd, ChannelItemDirect, ChannelItem },
 
   props: {
-    values: Array
+    values: Array,
+    active: {
+      required: false,
+      type: String
+    }
   }
 })
 </script>
@@ -38,4 +55,8 @@ div
   &::-webkit-scrollbar-thumb
     background: #161819
     border-radius: 15px
+.link
+  display: block
+.router-link-active
+  background: #27292E
 </style>

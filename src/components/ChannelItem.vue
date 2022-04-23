@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{'active': active}">
     <img :src="url" alt="channel-logo">
   </div>
 </template>
@@ -10,7 +10,8 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ChannelItem',
   props: {
-    url: String
+    url: String,
+    active: Boolean
   }
 })
 </script>
@@ -26,6 +27,8 @@ div
   transition: background-color 0.2s
   &:hover
     background: #27292E
+.active
+  background: #27292E
 img
   width: 70px
   height: 70px

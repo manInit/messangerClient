@@ -6,10 +6,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import HeaderChat from '@/components/HeaderChat.vue'
+import Api from '@/api'
 
 export default defineComponent({
   name: 'App',
-  components: { HeaderChat }
+  components: { HeaderChat },
+  mounted() {
+    Api.login()
+  }
 })
 </script>
 

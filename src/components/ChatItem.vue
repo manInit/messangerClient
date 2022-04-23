@@ -1,5 +1,5 @@
 <template>
-  <div class="chat">
+  <div class="chat" :class="{'chat_active': active}">
     <div class="chat__img">
       <chat-image :type="type" :size="'lg'" />
     </div>
@@ -27,6 +27,10 @@ export default defineComponent({
     title: String,
     nickname: String,
     msg: String,
+    active: {
+      required: false,
+      type: Boolean
+    },
     userAvatar: {
       type: String,
       required: false
@@ -44,6 +48,8 @@ export default defineComponent({
   padding: 10px 20px
   cursor: pointer
   transition: background-color 0.2s
+  &_active
+    background: #27292E
   &:hover
     background: #27292E
   &__title

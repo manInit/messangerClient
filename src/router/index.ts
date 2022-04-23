@@ -7,7 +7,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: MainPage
+      component: MainPage,
+      redirect: to => {
+        return { path: '/channel/direct' }
+      },
     },
     {
       path: '/login',
@@ -16,6 +19,14 @@ const router = createRouter({
     {
       path: '/register',
       component: RegistrationPage
+    },
+    {
+      path: '/channel/:channelId',
+      component: MainPage
+    },
+    {
+      path: '/channel/:channelId/chat/:chatId',
+      component: MainPage
     }
   ],
   history: createWebHistory()

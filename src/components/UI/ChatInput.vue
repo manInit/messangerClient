@@ -6,9 +6,15 @@
         :value="modelValue"
         @input="updateValue"
       ></textarea>
-      <font-awesome-icon :icon="['fas', 'paperclip']" />
+      <div class="input-form__btns">
+        <button>
+          <font-awesome-icon :icon="['fas', 'paperclip']" size="2x" />
+        </button>
+        <button>
+          <font-awesome-icon :icon="['fas', 'location-arrow']" size="2x" />
+        </button>
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -32,13 +38,22 @@ export default defineComponent({
 <style scoped lang="sass">
 .input-form
   width: 100%
+  &__btns
+    width: 10%
+    min-width: 100px
+    display: flex
+    justify-content: space-around
+    button
+      color: #BABABA
+      background: none
   &__wrapper
+    display: flex
+    align-items: center
     background: #27292E
     height: 65px
     border-radius: 15px
-    padding-bottom: 10px
   textarea
-    width: 80%
+    width: 90%
     height: 100%
     padding: 20px 10px 10px 20px
     border-radius: 15px

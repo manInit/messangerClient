@@ -8,14 +8,22 @@
           'list-container_no-moderator': !isModerator
         }"
     >
-      <chat-item
+      <router-link
+        style="text-decoration: none; color: inherit;"
+        class="link"
         v-for="item of values"
         :key="item.id"
-        :title="item.name"
-        :type="item.type"
-        :nickname="'Логин'"
-        :msg="'Последнее сообщение'"
-      />
+        :to="`/channel/${$route.params.channelId}/chat/${item.id}`"
+      >
+        <chat-item
+          :title="item.name"
+          :type="item.type"
+          :nickname="'Логин'"
+          :msg="'Последнее сообщение'"
+          :active="active.toString() === item.id.toString()"
+        />
+      </router-link>
+
       <chat-item-add
         class="chat-list__add"
         v-if="isModerator"
@@ -36,7 +44,8 @@ export default defineComponent({
   props: {
     values: Array,
     channelName: String,
-    isModerator: Boolean
+    isModerator: Boolean,
+    active: Boolean
   }
 })
 </script>
@@ -49,7 +58,8 @@ export default defineComponent({
     position: fixed
     bottom: 0
     background: #181A1B
-
+.link
+  display: block
 .list-container
   margin-top: 15px
   overflow-y: auto

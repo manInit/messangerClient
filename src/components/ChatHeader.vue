@@ -33,7 +33,7 @@ export default defineComponent({
 .chat-header
   background: #1C1E1F
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
-  height: 65px
+  height: 80px
   width: 100%
   display: flex
   align-items: center

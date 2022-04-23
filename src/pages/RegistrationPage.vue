@@ -8,41 +8,47 @@
       </nav>
       <form @submit.prevent>
         <input-form
-            class="login__input"
-            title="Логин"
-            v-model="login"
-            placeholder="Введите логин..."
-            :err="errs.login"
+          class="login__input"
+          title="Логин"
+          v-model="user.login"
+          placeholder="Введите логин..."
+          :err="errs.login"
+          @input="validationLogin"
         />
         <input-form
-            class="login__input"
-            title="Имя"
-            v-model="name"
-            placeholder="Введите имя..."
-            :err="errs.name"
+          class="login__input"
+          title="Имя"
+          v-model="user.name"
+          placeholder="Введите имя..."
+          :err="errs.name"
+          @input="validationName"
         />
         <input-form
-            class="login__input"
-            title="О себе"
-            v-model="about"
-            placeholder="РАсскажите о себе"
-            :err="errs.about"
+          class="login__input"
+          title="О себе"
+          v-model="user.about"
+          placeholder="Расскажите о себе"
+          :err="errs.about"
         />
         <input-form
-            class="login__input"
-            title="Пароль"
-            v-model="password"
-            placeholder="Придумайте пароль..."
-            :err="errs.password"
+          class="login__input"
+          title="Пароль"
+          v-model="user.password"
+          placeholder="Придумайте пароль..."
+          :err="errs.password"
+          :type="'password'"
+          @input="validationPassword"
         />
         <input-form
-            class="login__input"
-            title="Подтвердите пароль"
-            v-model="checkPassword"
-            placeholder="Повторите пароль..."
-            :err="errs.checkPassword"
+          class="login__input"
+          title="Подтвердите пароль"
+          v-model="checkPassword"
+          placeholder="Повторите пароль..."
+          :err="errs.checkPassword"
+          :type="'password'"
+          @input="validationEqPassword"
         />
-        <button-chat class="btn-submit">Зарегистрироваться</button-chat>
+        <button-chat @click="register" class="btn-submit">Зарегистрироваться</button-chat>
       </form>
     </main>
   </div>
@@ -52,17 +58,85 @@
 import InputForm from '@/components/UI/InputForm.vue'
 import ButtonChat from '@/components/UI/ButtonChat.vue'
 import { defineComponent } from 'vue'
+import Api from '@/api'
+import type User from '@/types/User'
 
 export default defineComponent({
   name: 'RegistrationPage',
   components: { ButtonChat, InputForm },
+  methods: {
+    validationName(): Boolean {
+      this.errs.name = ''
+      if (this.user.name.length < 2) {
+        this.errs.name = 'Имя состоит не менее из 2 символов'
+        return true
+      }
+      return false
+    },
+    validationLogin(): Boolean {
+      this.errs.login = ''
+      if (this.user.login.length < 5) {
+        this.errs.login = 'Логин должен быть не менее 5 символов'
+        return true
+      }
+      return false
+    },
+    validationPassword(): Boolean {
+      this.errs.password = ''
+      if (this.user.password!.length < 5) {
+        this.errs.password = 'Пароль не мнее 5 символов.'
+        return true
+      }
+      return false
+    },
+    validationEqPassword(): Boolean {
+      this.errs.checkPassword = ''
+      if (this.checkPassword !== this.user.password) {
+        this.errs.checkPassword = 'Пароли не совпадают'
+        return true
+      }
+      return false
+    },
+    validation(): Boolean {
+      this.errs.name = ''
+      this.errs.about = ''
+      this.errs.login = ''
+      this.errs.password = ''
+      this.errs.checkPassword = ''
+
+      const vLogin = this.validationLogin()
+      const vName = this.validationName()
+      const vPass = this.validationPassword()
+      const vPassEq = this.validationEqPassword()
+
+      return !vLogin && !vName && !vPass && !vPassEq
+    },
+    register() {
+      let isValid = this.validation()
+      if (!isValid) return
+
+      Api.registration(this.user).then((data: User) => {
+        if (!data.password) return
+
+        Api.login(data.login, this.user.password!.toString()).then((data: User) => {
+          //@ts-ignore
+          this.$store.dispatch('auth/tryLogin', data)
+          this.$router.push('/')
+        })
+      }).catch(e => {
+        this.errs.login = 'Логин уже используется другим пользователем'
+      })
+    }
+  },
   data() {
     return {
-      login: '',
-      password: '',
+      user: {
+        login: '',
+        password: '',
+        about: '',
+        name: ''
+      } as unknown as User,
       checkPassword: '',
-      about: '',
-      name: '',
       errs: {
         name: '',
         about: '',
@@ -81,7 +155,7 @@ h1
   font-weight: normal
 .wrapper
   width: 100vw
-  height: calc(100vh - 55px)
+  min-height: calc(100vh - 55px)
   display: flex
   justify-content: center
   align-items: center

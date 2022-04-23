@@ -62,11 +62,12 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.fetchChats()
+    this.fetchChannels()
   },
   methods: {
-    async fetchChats() {
-      const chats = await Api.getChats(this.$store.getters['auth/userToken'])
+    async fetchChannels() {
+      const chats = await Api.getChannels(this.$store.getters['auth/userToken'])
+      console.log(chats)
     }
   },
   data() {

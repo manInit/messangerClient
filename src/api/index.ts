@@ -1,9 +1,27 @@
 import axios from 'axios'
 import type Chat from '@/types/Chat'
 import type User from '@/types/User'
+import type Channel from '@/types/Channel'
 
 export default class Api {
   static root = 'http://192.168.0.102:8080/api'
+
+  static async fileUpload(file: File, token: string) {
+    const formData = new FormData()
+    formData.append('image', file)
+
+    return await Api.sendFormData(Api.root + 'images', formData, token)
+  }
+
+  static async sendFormData(url: String, bodyFormData: FormData, token: String) {
+    const res = await axios({
+      method: 'post',
+      url: this.root + url,
+      data: bodyFormData,
+      headers: { 'Content-Type': 'multipart/form-data', 'Authorization': 'Bearer ' + token }
+    })
+    return res.data
+  }
 
   static async fetchJsonWithToken<T>(url: string, token: string) {
     let addHeaders = {'Authorization': 'Bearer ' + token}
@@ -12,15 +30,45 @@ export default class Api {
     })
   }
 
+  static async sendJsonWithToken<T>(data: any, url: string, token: string) {
+    let addHeaders = {'Authorization': 'Bearer ' + token}
+    return await axios.post<T>(this.root + url, data, {
+      headers: addHeaders
+    })
+  }
+
+  static async createChannel(channel: Channel, token: string) {
+    return this.sendJsonWithToken<Channel>({
+      name: channel.name,
+      about: channel.about
+    }, '/channels', token)
+  }
+
   static async getChats(token: string): Promise<Chat[]> {
     const res = await Api.fetchJsonWithToken<Chat[]>('/chats', token)
     return res.data
   }
 
-  static async login(login: string, password: string): Promise<User> {
+  static async getChannels(token: string): Promise<Chat[]> {
+    const res = await Api.fetchJsonWithToken<Chat[]>('/channels', token)
+    return res.data
+  }
+
+  static async login(login: String, password: String): Promise<User> {
     const res = await axios.post<User>(Api.root + '/login', {
       login,
       password
+    })
+    return res.data
+  }
+
+  static async registration(user: User): Promise<User> {
+    const res = await axios.post<User>(Api.root + '/register', {
+      login: user.login,
+      name: user.name,
+      password: user.password,
+      about: user.about,
+      avatar: null
     })
     return res.data
   }

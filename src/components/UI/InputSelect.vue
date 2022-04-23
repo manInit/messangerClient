@@ -1,15 +1,13 @@
 <template>
   <div class="input-group">
     <h4 class="input-group__title">{{ title }}</h4>
-    <input
-        :value="modelValue"
-        @input="updateValue"
-        :placeholder="placeholder"
-        :type="type"
-        :class="{
-          'input-group_err': err
-        }"
+    <select
+      :value="modelValue"
+      @change="updateValue"
     >
+      <option value="1" selected>Групповой</option>
+      <option value="2">Информационный</option>
+    </select>
     <div class="input-group__err" :class="{'visible': err.length !== 0}">{{ err }}</div>
   </div>
 </template>
@@ -18,13 +16,14 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'InputForm',
+  name: 'InputSelect',
   props: {
     modelValue: [String, Number],
     title: String,
     placeholder: String,
     err: {
       type: String,
+      default: '',
       required: false
     },
     type: {
@@ -35,7 +34,7 @@ export default defineComponent({
   methods: {
     updateValue(e: Event) {
       const input = e.target as HTMLInputElement
-      this.$emit('update:modelValue', input.value)
+      this.$emit('update:modelValue', parseInt(input.value))
     }
   }
 })
@@ -57,8 +56,7 @@ export default defineComponent({
     font-size: 14px
     color: #C51A1A
     min-height: 17px
-  input
-    padding: 20px
+  select
     font-size: 18px
     background: #27292E
     display: block

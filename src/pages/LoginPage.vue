@@ -9,17 +9,17 @@
       <form @submit.prevent>
         <span class="err" v-if="errs">{{ errs }}</span>
         <input-form
-            class="login__input"
-            title="Логин"
-            v-model="login"
-            placeholder="Введите логин..."
+          class="login__input"
+          title="Логин"
+          v-model="login"
+          placeholder="Введите логин..."
         />
         <input-form
-            class="login__input"
-            title="Пароль"
-            v-model="password"
-            placeholder="Введите пароль..."
-            :type="'password'"
+          class="login__input"
+          title="Пароль"
+          v-model="password"
+          placeholder="Введите пароль..."
+          :type="'password'"
         />
         <button-chat @click="auth" class="btn-submit">Войти</button-chat>
       </form>
@@ -47,7 +47,6 @@ export default defineComponent({
   methods: {
     auth() {
       this.errs = ''
-
       Api.login(this.login, this.password).then((data: User) => {
         this.$store.dispatch('auth/tryLogin', data)
         this.$router.push('/')

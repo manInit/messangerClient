@@ -7,10 +7,11 @@
 import { defineComponent } from 'vue'
 import HeaderChat from '@/components/HeaderChat.vue'
 import Api from '@/api'
+import ExtraModalInfo from '@/components/ExtraModalInfo.vue'
 
 export default defineComponent({
   name: 'App',
-  components: { HeaderChat }
+  components: {ExtraModalInfo, HeaderChat }
 })
 </script>
 
@@ -20,6 +21,8 @@ export default defineComponent({
   padding: 0
   box-sizing: border-box
   font-family: Roboto, sans-serif
+body
+  overflow-x: hidden
 button
   display: block
   border: none

@@ -22,6 +22,11 @@
     </router-link>
 
     <channel-item-add
+        @click="showModal"
+    />
+    <create-channel-modal
+      :show="show"
+      @close="show = false"
     />
   </div>
 </template>
@@ -31,16 +36,27 @@ import ChannelItem from '@/components/ChannelItem.vue'
 import { defineComponent } from 'vue'
 import ChannelItemDirect from '@/components/ChannelItemDirect.vue'
 import ChannelItemAdd from '@/components/ChannelItemAdd.vue'
+import CreateChannelModal from '@/components/CreateChannelModal.vue'
 
 export default defineComponent({
   name: 'ChannelList',
-  components: {ChannelItemAdd, ChannelItemDirect, ChannelItem },
+  components: {CreateChannelModal, ChannelItemAdd, ChannelItemDirect, ChannelItem },
 
   props: {
     values: Array,
     active: {
       required: false,
       type: String
+    }
+  },
+  data() {
+    return {
+      show: false
+    }
+  },
+  methods: {
+    showModal() {
+      this.show = true
     }
   }
 })

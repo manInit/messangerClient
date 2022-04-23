@@ -27,6 +27,12 @@
       <chat-item-add
         class="chat-list__add"
         v-if="isModerator"
+        @click="show = true"
+        style="z-index: 1;"
+      />
+      <create-chat-modal
+        :show="show"
+        @close="show = false"
       />
     </div>
   </div>
@@ -37,15 +43,21 @@ import { defineComponent } from 'vue'
 import ChatItem from '@/components/ChatItem.vue'
 import ChannelItemAdd from '@/components/ChannelItemAdd.vue'
 import ChatItemAdd from '@/components/ChatItemAdd.vue'
+import CreateChatModal from '@/components/CreateChatlModal.vue'
 
 export default defineComponent({
   name: 'ChatList',
-  components: {ChatItemAdd, ChatItem, ChannelItemAdd},
+  components: {CreateChatModal, ChatItemAdd, ChatItem, ChannelItemAdd},
   props: {
     values: Array,
     channelName: String,
     isModerator: Boolean,
     active: Boolean
+  },
+  data() {
+    return {
+      show: false
+    }
   }
 })
 </script>

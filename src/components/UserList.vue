@@ -5,6 +5,7 @@
       class="user"
   >
     <user-avatar
+      :user="users[i - 1]"
       :url="'/src/assets/avatar-mock.png'"
     />
   </div>
@@ -15,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UserAvatar from '@/components/UI/UserAvatar.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 export default defineComponent({
   name: 'UserList',

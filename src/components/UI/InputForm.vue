@@ -25,6 +25,7 @@ export default defineComponent({
     placeholder: String,
     err: {
       type: String,
+      default: '',
       required: false
     },
     type: {

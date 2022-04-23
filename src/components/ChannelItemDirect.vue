@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UserAvatar from '@/components/UI/UserAvatar.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 export default defineComponent({
   name: 'ChannelItemDirect',

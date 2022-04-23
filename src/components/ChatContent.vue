@@ -8,37 +8,27 @@
       <div class="chat__date">Сегодня</div>
       <message-group
         class="chat__group-msg"
-        :username="'Allan Poe'"
+        :user="chat.users[0]"
         :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
         :time="'20:30'"
       />
       <message-group
-        class="chat__group-msg"
-        :username="'Allan Poe'"
-        :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
-        :time="'20:30'"
-        :is-reverse="true"
+          class="chat__group-msg"
+          :user="chat.users[0]"
+          :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
+          :time="'20:30'"
       />
       <message-group
           class="chat__group-msg"
-          :username="'Allan Poe'"
+          :user="chat.users[0]"
           :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
           :time="'20:30'"
-          :is-reverse="true"
       />
       <message-group
           class="chat__group-msg"
-          :username="'Allan Poe'"
+          :user="chat.users[0]"
           :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
           :time="'20:30'"
-          :is-reverse="true"
-      />
-      <message-group
-          class="chat__group-msg"
-          :username="'Allan Poe'"
-          :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"
-          :time="'20:30'"
-          :is-reverse="true"
       />
     </div>
     <chat-input

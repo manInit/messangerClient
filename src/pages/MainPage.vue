@@ -24,7 +24,7 @@
       :chat="chat"
     />
   </main>
-  <extra-modal-info />
+  <extra-user-info />
 </template>
 
 <script lang="ts">
@@ -32,18 +32,20 @@ import { defineComponent } from 'vue'
 
 import ChannelList from '@/components/ChannelList.vue'
 import HeaderChat from '@/components/HeaderChat.vue'
-import UserAvatar from '@/components/UI/UserAvatar.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 import ChatList from '@/components/ChatList.vue'
 import ChatType from '@/types/ChatType'
 import ChatContent from '@/components/ChatContent.vue'
 import ChannelDescription from '@/components/ChannelDescription.vue'
 import ModalChat from '@/components/UI/ModalChat.vue'
-import ExtraModalInfo from '@/components/ExtraModalInfo.vue'
+import ExtraModalInfo from '@/components/ExtraUserInfo.vue'
 import Api from '@/api'
+import ExtraUserInfo from '@/components/ExtraUserInfo.vue'
 
 export default defineComponent({
   name: 'MainPage',
   components: {
+    ExtraUserInfo,
     ExtraModalInfo,
     ModalChat,
     ChannelDescription,
@@ -98,7 +100,12 @@ export default defineComponent({
       ],
       chat: {
         type: 1,
-        users: [{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]
+        users: [
+          {id: 1, login: 'alla', name: 'sdsdsd', about: 'dfdfdfd'},
+          {id: 1, login: 'alla', name: 'tiuyi', about: 'dfdfdfd'},
+          {id: 1, login: 'alla', name: 'ee', about: 'dfdfdfd'},
+          {id: 1, login: 'alla', name: 'ertrt', about: 'dfdfdfd'},
+          {id: 1, login: 'alla', name: 'eeee', about: 'yyrtrt'}]
       },
       channel: {
         name: 'Название канала',

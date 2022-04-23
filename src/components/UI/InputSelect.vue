@@ -57,11 +57,11 @@ export default defineComponent({
     color: #C51A1A
     min-height: 17px
   select
+    width: 500px
     font-size: 18px
     background: #27292E
     display: block
     height: 55px
-    width: 500px
     margin-top: 11px
     border: none
     color: #BABABA

@@ -7,7 +7,7 @@
 import { defineComponent } from 'vue'
 import HeaderChat from '@/components/HeaderChat.vue'
 import Api from '@/api'
-import ExtraModalInfo from '@/components/ExtraModalInfo.vue'
+import ExtraModalInfo from '@/components/ExtraUserInfo.vue'
 
 export default defineComponent({
   name: 'App',

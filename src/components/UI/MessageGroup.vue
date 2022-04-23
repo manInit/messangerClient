@@ -6,13 +6,11 @@
     }"
   >
     <div class="message-group__avatar">
-      <user-avatar
-        :url="'/src/assets/avatar-mock.png'"
-      />
+      <user-avatar :user="user"/>
     </div>
     <div class="message-group__content">
       <div class="message-group__meta">
-        <h5>{{ username }}</h5>
+        <h5>{{ user.name }}</h5>
         <span class="message-group__time">{{ time }}</span>
       </div>
       <div class="message-group__list">
@@ -30,14 +28,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UserAvatar from '@/components/UI/UserAvatar.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 import MessageText from '@/components/UI/MessageText.vue'
+import type User from '@/types/User'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   name: 'MessageGroup',
   components: {MessageText, UserAvatar},
   props: {
-    username: String,
+    user: Object as PropType<User>,
     time: String,
     texts: Array,
     isReverse: {

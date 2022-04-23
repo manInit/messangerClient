@@ -1,5 +1,5 @@
 <template>
-  <modal-chat v-if="user" class="modal" :is-show="show" @close="show = false">
+  <modal-chat v-if="user" class="modal" :is-show="show" @close="close">
     <h5 class="modal__title">Подробности</h5>
     <div class="modal__group user">
       <div class="user__avatar">
@@ -26,24 +26,25 @@
 import { defineComponent } from 'vue'
 import ModalChat from '@/components/UI/ModalChat.vue'
 import ButtonChat from '@/components/UI/ButtonChat.vue'
-import UserAvatar from '@/components/UI/UserAvatar.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+import InputForm from '@/components/UI/InputForm.vue'
 import type User from '@/types/User'
 import type { PropType } from 'vue'
-import InputForm from '@/components/UI/InputForm.vue'
-import type Channel from '@/types/Channel'
 
 export default defineComponent({
-  name: 'ExtraModalInfo',
+  name: 'ExtraUserInfo',
   components: {InputForm, UserAvatar, ButtonChat, ModalChat},
-  props: {
-    user: {
-      type: Object as PropType<User>,
-      required: true
+  computed: {
+    user(): User {
+      return this.$store.state.userModal.user ?? null
+    },
+    show(): boolean {
+      return this.$store.state.userModal.open
     }
   },
-  data() {
-    return {
-      show: true
+  methods: {
+    close() {
+      this.$store.dispatch('userModal/hide')
     }
   }
 })

@@ -1,9 +1,9 @@
 <template>
   <img
-      v-if="type === 0"
+      v-if="type === 'PRIVATE'"
       :src="'/src/assets/avatar-mock.png'"
       alt="user avatar" >
-  <div class="chat__picture_public" v-else-if="type === 1">
+  <div class="chat__picture_public" v-else-if="type === 'PUBLIC'">
     <font-awesome-icon :icon="['fas', 'user-group']"
                        :size="size" />
   </div>
@@ -20,7 +20,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ChatImage',
   props: {
-    type: Number,
+    type: String,
     url: String,
     size: String
   }

@@ -17,7 +17,7 @@
       >
         <chat-item
           :title="item.name"
-          :type="item.type"
+          :type="item.chatType"
           :nickname="'Логин'"
           :msg="'Последнее сообщение'"
           :active="active.toString() === item.id.toString()"
@@ -33,6 +33,8 @@
       <create-chat-modal
         :show="show"
         @close="show = false"
+        :channel="channel"
+        @update="update"
       />
     </div>
   </div>
@@ -44,6 +46,8 @@ import ChatItem from '@/components/ChatItem.vue'
 import ChannelItemAdd from '@/components/ChannelItemAdd.vue'
 import ChatItemAdd from '@/components/ChatItemAdd.vue'
 import CreateChatModal from '@/components/CreateChatlModal.vue'
+import type Channel from '@/types/Channel'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   name: 'ChatList',
@@ -52,11 +56,20 @@ export default defineComponent({
     values: Array,
     channelName: String,
     isModerator: Boolean,
-    active: Boolean
+    active: Boolean,
+    channel: {
+      type: Object as PropType<Channel>
+    }
   },
   data() {
     return {
       show: false
+    }
+  },
+  methods: {
+    update() {
+      this.show = false
+      this.$emit('updateChat')
     }
   }
 })
@@ -67,6 +80,7 @@ export default defineComponent({
   background: #181A1B
   color: #fff
   &__add
+    width: 100%
     position: fixed
     bottom: 0
     background: #181A1B

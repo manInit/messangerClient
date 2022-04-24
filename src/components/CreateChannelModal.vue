@@ -94,7 +94,12 @@ export default defineComponent({
       const isValid = this.validation()
       if (!isValid) return
 
-      Api.createChannel(this.channel, this.$store.getters['auth/userToken'])
+      Api.createChannel(this.channel, this.$store.getters['auth/userToken']).then(data => {
+        this.$emit('close')
+        this.$emit('update')
+        this.channel.about = ''
+        this.channel.name = ''
+      })
     }
   }
 })

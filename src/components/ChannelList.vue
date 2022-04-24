@@ -16,7 +16,8 @@
         :to="`/channel/${item.id}`"
     >
       <channel-item
-        :url="item.img"
+        :url="item.avatar?.path"
+        :name="item.name"
         :active="active === item.id.toString()"
       />
     </router-link>
@@ -27,6 +28,7 @@
     <create-channel-modal
       :show="show"
       @close="show = false"
+      @update="$emit('update')"
     />
   </div>
 </template>
@@ -73,6 +75,7 @@ div
     border-radius: 15px
 .link
   display: block
+  text-decoration: none
 .router-link-active
   background: #27292E
 </style>

@@ -34,16 +34,21 @@
     <chat-input
       class="chat__input"
       v-model="text"
+      @send="sendMessage"
     />
   </div>
 </template>
 
 <script lang="ts">
+
 import { defineComponent } from 'vue'
 import ChatHeader from '@/components/ChatHeader.vue'
 import InputForm from '@/components/UI/InputForm.vue'
 import ChatInput from '@/components/UI/ChatInput.vue'
 import MessageGroup from '@/components/UI/MessageGroup.vue'
+//@ts-ignore
+import SockJS from 'sockjs-client/dist/sockjs'
+import { Stomp } from '@stomp/stompjs'
 
 export default defineComponent({
   name: 'ChatContent',
@@ -57,6 +62,13 @@ export default defineComponent({
   data() {
     return {
       text: ''
+    }
+  },
+  methods: {
+    sendMessage() {
+      stompClient.send(
+          'api/chat/1', {},
+          JSON.stringify({ text: this.text }))
     }
   }
 })

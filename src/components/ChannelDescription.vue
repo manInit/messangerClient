@@ -11,10 +11,10 @@
         {{ text }}
       </p>
     </div>
-    <div class="desc__url">
-      <h3>Пригласительная ссылка</h3>
-      <div @click="copy">{{ url }}</div>
-    </div>
+<!--    <div class="desc__url">-->
+<!--      <h3>Пригласительная ссылка</h3>-->
+<!--      <div @click="copy">{{ url }}</div>-->
+<!--    </div>-->
   </div>
 </template>
 

@@ -44,13 +44,23 @@ export default class Api {
     }, '/channels', token)
   }
 
-  static async getChats(token: string): Promise<Chat[]> {
-    const res = await Api.fetchJsonWithToken<Chat[]>('/chats', token)
+  static async getChats(id: string, token: string): Promise<Chat[]> {
+    const res = await Api.fetchJsonWithToken<Chat[]>(`/channels/${id}/chats`, token)
     return res.data
   }
 
-  static async getChannels(token: string): Promise<Chat[]> {
-    const res = await Api.fetchJsonWithToken<Chat[]>('/channels', token)
+  static async createChat(chat: {name: String, chatType: number, channel: Channel}, token: string): Promise<Chat> {
+    const res = await this.sendJsonWithToken<Chat>({
+      name: chat.name,
+      chatType: chat.chatType,
+      channel: chat.channel
+    }, '/chats', token)
+
+    return res.data
+  }
+
+  static async getChannels(token: string): Promise<Channel[]> {
+    const res = await Api.fetchJsonWithToken<Channel[]>('/channels', token)
     return res.data
   }
 

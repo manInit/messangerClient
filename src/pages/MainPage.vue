@@ -4,17 +4,21 @@
       class="main__channel-list"
       :values="channelArr"
       :active="activeChannelId ?? false"
+      @update="fetchChannels"
     />
     <chat-list
+      class="main__chat-list"
       :channel-name="'Личное'"
       :values="chatArr"
+      :channel="channel"
       :is-moderator="true"
       :active="activeChatId ?? false"
+      @updateChat="fetchChats"
     />
     <channel-description
       v-if="!activeChatId"
       :name="channel.name"
-      :text="channel.text"
+      :text="channel.about"
       :url="channel.url"
       class="main__chat"
     />
@@ -41,6 +45,11 @@ import ModalChat from '@/components/UI/ModalChat.vue'
 import ExtraModalInfo from '@/components/ExtraUserInfo.vue'
 import Api from '@/api'
 import ExtraUserInfo from '@/components/ExtraUserInfo.vue'
+import type Channel from '@/types/Channel'
+//@ts-ignore
+import SockJS from 'sockjs-client/dist/sockjs'
+import { Stomp } from '@stomp/stompjs'
+import type Chat from '@/types/Chat'
 
 export default defineComponent({
   name: 'MainPage',
@@ -57,47 +66,62 @@ export default defineComponent({
   },
   computed: {
     activeChannelId() {
-      return this.$route.params.channelId ?? null
+      if (!this.$route.params.channelId) return null
+      if (this.$route.params.channelId === 'direct') {
+        this.chatArr = []
+        this.setDirectChannel()
+        return
+      }
+      return this.$route.params.channelId
     },
     activeChatId() {
       return this.$route.params.chatId ?? null
     }
   },
+  watch: {
+    activeChannelId() {
+      this.channel = this.channelArr.find(item => item.id === this.$route.params.channelId)
+      this.fetchChats()
+    }
+  },
   mounted() {
+    const socket = new SockJS('http://192.168.0.102:8080/chat')
+    const stompClient = Stomp.over(socket)
+    stompClient.connect({}, (frame: any) => {
+      console.log('Connected: ' + frame);
+      stompClient.subscribe('/api/chat', function (messageOutput) {
+        console.log(messageOutput);
+      });
+
+      stompClient.send(
+          'api/chat/1', {},
+          JSON.stringify({ text: 'dfdfd' }))
+    })
+
+
     this.fetchChannels()
+    if (this.activeChannelId) this.fetchChats()
   },
   methods: {
     async fetchChannels() {
-      const chats = await Api.getChannels(this.$store.getters['auth/userToken'])
-      console.log(chats)
+      this.channelArr = await Api.getChannels(this.$store.getters['auth/userToken'])
+    },
+    async fetchChats() {
+      if (!this.activeChannelId || this.activeChannelId === 'direct') return
+      this.chatArr = await Api.getChats(this.activeChannelId, this.$store.getters['auth/userToken'])
+    },
+    setDirectChannel() {
+      this.channel = {
+        name: 'Личное',
+        about: 'Ваши личные сообщения'
+      }
     }
   },
   data() {
     return {
-      channelArr: [
-        {img: '/src/assets/mock-channel.png', id: 1},
-        {img: '/src/assets/mock-channel.png', id: 2},
-        {img: '/src/assets/mock-channel.png', id: 3},
-        {img: '/src/assets/mock-channel.png', id: 4},
-        {img: '/src/assets/mock-channel.png', id: 5},
-        {img: '/src/assets/mock-channel.png', id: 6},
-        {img: '/src/assets/mock-channel.png', id: 7},
-        {img: '/src/assets/mock-channel.png', id: 8},
-        {img: '/src/assets/mock-channel.png', id: 9}
-      ],
-      chatArr: [
-        {id: 1, type: ChatType.PUBLIC, name: 'ЧТо-то'},
-        {id: 2, type: ChatType.PRIVATE, name: 'ЧТо-то'},
-        {id: 3, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 4, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 5, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 6, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 7, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 8, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 9, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 10, type: ChatType.CHANNEL, name: 'ЧТо-то'},
-        {id: 11, type: ChatType.PRIVATE, name: 'ЧТо-то'}
-      ],
+      channelArr: [] as Channel[],
+      chatArr: [] as Chat[],
+      channel: {} as Channel,
       chat: {
         type: 1,
         users: [
@@ -107,11 +131,6 @@ export default defineComponent({
           {id: 1, login: 'alla', name: 'ertrt', about: 'dfdfdfd'},
           {id: 1, login: 'alla', name: 'eeee', about: 'yyrtrt'}]
       },
-      channel: {
-        name: 'Название канала',
-        text: `"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."`,
-        url: 'http://localhost:8080/linklink'
-      }
     }
   }
 })
@@ -121,6 +140,8 @@ export default defineComponent({
 .main
   display: flex
   height: calc(100vh - 55px)
+  &__chat-list
+    min-width: 360px
   &__channel-list
     padding-top: 15px
     min-width: 100px

@@ -23,7 +23,7 @@ export default defineComponent({
 .chat
   display: flex
   align-items: center
-  width: 360px
+  max-width: 360px
   height: 67px
   padding: 10px 20px
   cursor: pointer

@@ -10,7 +10,7 @@
         <button>
           <font-awesome-icon :icon="['fas', 'paperclip']" size="2x" />
         </button>
-        <button>
+        <button @click="$emit('send')">
           <font-awesome-icon :icon="['fas', 'location-arrow']" size="2x" />
         </button>
       </div>

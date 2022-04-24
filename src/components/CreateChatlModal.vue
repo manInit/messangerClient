@@ -1,15 +1,15 @@
 <template>
   <modal-chat class="modal" :is-show="show" @close="show">
     <input-form
-        class="modal__input"
-        title="Название чата"
-        v-model="chat.name"
-        placeholder="Введите название..."
-        @input="validationName"
-        :err="errs.name"
+      class="modal__input"
+      title="Название чата"
+      v-model="chat.name"
+      placeholder="Введите название..."
+      @input="validationName"
+      :err="errs.name"
     />
     <input-select
-      v-model="chat.type"
+      v-model="chat.chatType"
       title="Выберите тип"
     />
     <button-chat @click="createChat" class="modal__btn">
@@ -27,19 +27,24 @@ import ButtonChat from '@/components/UI/ButtonChat.vue'
 import InputFile from '@/components/UI/InputFile.vue'
 import Api from '@/api'
 import InputSelect from '@/components/UI/InputSelect.vue'
+import type Chat from '@/types/Chat'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   name: 'CreateChatModal',
   components: {InputSelect, InputFile, ButtonChat, InputForm, ModalChat },
   props: {
-    show: Boolean
+    show: Boolean,
+    channel: {
+      type: Object as PropType<Channel>
+    }
   },
   data() {
     return {
       chat: {
         name: '',
-        type: '1'
-      } as unknown as Channel,
+        chatType: '1'
+      } as unknown as Chat,
       errs: {
         name: '',
       }
@@ -67,7 +72,16 @@ export default defineComponent({
     createChat() {
       const isValid = this.validation()
       if (!isValid) return
+      if (!this.channel) return
 
+      const chat = {
+        name: this.chat.name,
+        chatType: parseInt(this.chat.chatType),
+        channel: this.channel
+      }
+      Api.createChat(chat, this.$store.getters['auth/userToken']).then(data => {
+        this.$emit('update')
+      })
     }
   }
 })

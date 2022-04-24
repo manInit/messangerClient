@@ -2,14 +2,14 @@
   <div class="chat-header">
     <div class="chat-header__icon">
       <chat-image
-          :type="type"
+          :type="chat.chatType"
           :size="'s'"
       />
     </div>
-    <h4 class="chat-header__title">Название чата 2</h4>
-    <div class="chat-header__type">Групповой чат</div>
+    <h4 class="chat-header__title">{{ chat.name }}</h4>
+    <div class="chat-header__type">{{ chatType }}</div>
     <div class="chat-header__users">
-      <user-list :users="users"/>
+      <user-list v-if="users.length > 0" :users="users"/>
     </div>
   </div>
 </template>
@@ -18,13 +18,26 @@
 import { defineComponent } from 'vue'
 import ChatImage from '@/components/UI/ChatImage.vue'
 import UserList from '@/components/UserList.vue'
+import type Chat from '@/types/Chat'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   name: 'ChatHeader',
   components: { UserList, ChatImage },
   props: {
     type: Number,
-    users: Array
+    users: {
+      type: Array,
+      default: []
+    },
+    chat: Object as PropType<Chat>
+  },
+  computed: {
+    chatType() {
+      if (this.chat.chatType === 'PUBLIC') return 'Групповой чат'
+      if (this.chat.chatType === 'PRIVATE') return 'Личный чат'
+      return 'Информационный чат'
+    }
   }
 })
 </script>

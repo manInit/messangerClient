@@ -5,6 +5,7 @@
         placeholder="Введите сообщение..."
         :value="modelValue"
         @input="updateValue"
+        @keyup.enter="$emit('send')"
       ></textarea>
       <div class="input-form__btns">
         <button>
@@ -29,7 +30,7 @@ export default defineComponent({
   methods: {
     updateValue(e: Event) {
       const input = e.target as HTMLInputElement
-      this.$emit('update:modelValue', input.value)
+      this.$emit('update:modelValue', input.value.replace(/(\r\n|\n|\r)/gm, '').trim())
     }
   }
 })

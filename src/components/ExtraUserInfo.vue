@@ -7,7 +7,7 @@
       </div>
       <div class="user__desc">
         <h6 class="user__name">{{ user.name }}</h6>
-        <div class="user__status">Online</div>
+<!--        <div class="user__status">Online</div>-->
       </div>
     </div>
     <div class="modal__group">

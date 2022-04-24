@@ -8,7 +8,7 @@
     />
     <chat-list
       class="main__chat-list"
-      :channel-name="'Личное'"
+      :channel-name="channel.name"
       :values="chatArr"
       :channel="channel"
       :is-moderator="true"
@@ -70,44 +70,39 @@ export default defineComponent({
       if (this.$route.params.channelId === 'direct') {
         this.chatArr = []
         this.setDirectChannel()
-        return
       }
       return this.$route.params.channelId
     },
     activeChatId() {
-      return this.$route.params.chatId ?? null
+      if (!this.$route.params.chatId) return null
+
+      return this.$route.params.chatId
     }
   },
   watch: {
     activeChannelId() {
       this.channel = this.channelArr.find(item => item.id === this.$route.params.channelId)
       this.fetchChats()
+    },
+    activeChatId() {
+      this.chat = this.chatArr.find(item => item.id === this.$route.params.chatId)
     }
   },
   mounted() {
-    const socket = new SockJS('http://192.168.0.102:8080/chat')
-    const stompClient = Stomp.over(socket)
-    stompClient.connect({}, (frame: any) => {
-      console.log('Connected: ' + frame);
-      stompClient.subscribe('/api/chat', function (messageOutput) {
-        console.log(messageOutput);
-      });
-
-      stompClient.send(
-          'api/chat/1', {},
-          JSON.stringify({ text: 'dfdfd' }))
-    })
-
-
     this.fetchChannels()
-    if (this.activeChannelId) this.fetchChats()
+    this.fetchChats()
   },
   methods: {
     async fetchChannels() {
       this.channelArr = await Api.getChannels(this.$store.getters['auth/userToken'])
     },
     async fetchChats() {
-      if (!this.activeChannelId || this.activeChannelId === 'direct') return
+      // if (!this.activeChannelId) return
+      if (this.activeChannelId === 'direct') {
+        this.setDirectChannel()
+        this.chatArr = await Api.getChatsPrivate(this.$store.getters['auth/userToken'])
+        return
+      }
       this.chatArr = await Api.getChats(this.activeChannelId, this.$store.getters['auth/userToken'])
     },
     setDirectChannel() {
@@ -122,15 +117,7 @@ export default defineComponent({
       channelArr: [] as Channel[],
       chatArr: [] as Chat[],
       channel: {} as Channel,
-      chat: {
-        type: 1,
-        users: [
-          {id: 1, login: 'alla', name: 'sdsdsd', about: 'dfdfdfd'},
-          {id: 1, login: 'alla', name: 'tiuyi', about: 'dfdfdfd'},
-          {id: 1, login: 'alla', name: 'ee', about: 'dfdfdfd'},
-          {id: 1, login: 'alla', name: 'ertrt', about: 'dfdfdfd'},
-          {id: 1, login: 'alla', name: 'eeee', about: 'yyrtrt'}]
-      },
+      chat: {} as Chat
     }
   }
 })

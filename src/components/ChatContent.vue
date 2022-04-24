@@ -11,7 +11,7 @@
         v-for="msg in msgs"
         :key="msg.id"
         class="chat__group-msg"
-        :texts="[{id: 1, text: msg.text}]"
+        :texts="[msg]"
       />
 
 <!--      <message-group-->
@@ -59,13 +59,15 @@ export default defineComponent({
   },
   computed: {
     type() {
-      return this.chat?.id
+      return this.chat.id
     }
   },
   watch: {
     type() {
-      this.fetchUsers()
-      this.connect()
+      this.fetchMessages().then(() => {
+        this.fetchUsers()
+        this.connect()
+      })
     }
   },
   data() {
@@ -91,18 +93,25 @@ export default defineComponent({
       })
     },
     sendMessage() {
-      this.text = ''
       stompClient.send(`/api/chat/${this.chat.id}`, {}, JSON.stringify({
         text: this.text,
         sender: {
           token: this.$store.getters['auth/userToken']
         }
       }))
+      this.text = ''
+    },
+    fetchMessages() {
+      return Api.getMessages(this.chat.id, this.$store.getters['auth/userToken']).then(data => {
+        this.msgs = data
+      })
     }
   },
   mounted() {
-    this.fetchUsers()
-    this.connect()
+    this.fetchMessages().then(() => {
+      this.fetchUsers()
+      this.connect()
+    })
   }
 })
 </script>

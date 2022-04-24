@@ -59,6 +59,11 @@ export default class Api {
     return res.data
   }
 
+  static async getMessages(id: string, token: string) {
+    const res = await Api.fetchJsonWithToken<Chat[]>(`/chats/${id}/messages`, token)
+    return res.data
+  }
+
   static async createChat(chat: {name: String, chatType: number, channel: Channel}, token: string): Promise<Chat> {
     const res = await this.sendJsonWithToken<Chat>({
       name: chat.name,

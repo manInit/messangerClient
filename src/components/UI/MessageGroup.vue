@@ -10,8 +10,8 @@
     </div>
     <div class="message-group__content">
       <div class="message-group__meta">
-        <h5>{{ user.name }}</h5>
-        <span class="message-group__time">{{ time }}</span>
+        <h5>{{ texts[0].sender.name }}</h5>
+<!--        <span class="message-group__time">{{ time }}</span>-->
       </div>
       <div class="message-group__list">
         <message-text
@@ -32,6 +32,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 import MessageText from '@/components/UI/MessageText.vue'
 import type User from '@/types/User'
 import type { PropType } from 'vue'
+import type Message from '@/types/Message'
 
 export default defineComponent({
   name: 'MessageGroup',
@@ -39,7 +40,7 @@ export default defineComponent({
   props: {
     user: Object as PropType<User>,
     time: String,
-    texts: Array,
+    texts: Array as PropType<Message[]>,
     isReverse: {
       type: Boolean,
       default: false

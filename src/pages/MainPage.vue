@@ -101,6 +101,11 @@ export default defineComponent({
       if (this.activeChannelId === 'direct') {
         this.setDirectChannel()
         this.chatArr = await Api.getChatsPrivate(this.$store.getters['auth/userToken'])
+        if (this.$route.params.chatId) {
+          console.log(this.$route.params.chatId)
+          this.chat = this.chatArr.find(item => item.id === this.$route.params.chatId)
+          console.log(this.chat)
+        }
         return
       }
       this.chatArr = await Api.getChats(this.activeChannelId, this.$store.getters['auth/userToken'])

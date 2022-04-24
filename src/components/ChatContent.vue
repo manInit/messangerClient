@@ -12,6 +12,7 @@
         :key="msg.id"
         class="chat__group-msg"
         :texts="[msg]"
+        :is-reverse="$store.state.auth.login === msg.sender.login"
       />
 <!--      <message-group-->
 <!--        :user="chat.users[0]"-->
@@ -73,7 +74,7 @@ export default defineComponent({
   methods: {
     scrollToElement() {
       const el = document.getElementById('scrollToME')
-      el.scroll(0, 1000000000)
+      el.scroll(0, 100000000)
     },
     fetchUsers() {
       if (!this.chat.id) return

@@ -5,10 +5,10 @@
     </div>
     <div class="chat__content">
       <h5 class="chat__title">{{ title }}</h5>
-      <div class="chat__msg">
-        <span class="chat__nick">{{ nickname }}: </span>
-        <span class="chat__text">{{ msg }}</span>
-      </div>
+<!--      <div class="chat__msg">-->
+<!--        <span class="chat__nick">{{ nickname }}: </span>-->
+<!--        <span class="chat__text">{{ msg }}</span>-->
+<!--      </div>-->
     </div>
   </div>
 </template>

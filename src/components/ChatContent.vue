@@ -1,11 +1,11 @@
 <template>
-  <div class="chat">
+  <div class="chat" >
     <chat-header
       :type="chat.chatType"
       :users="users"
       :chat="chat"
     />
-    <div class="chat__msgs">
+    <div id="scrollToME" class="chat__msgs">
       <div class="chat__date">Сегодня</div>
       <message-group
         v-for="msg in msgs"
@@ -13,7 +13,6 @@
         class="chat__group-msg"
         :texts="[msg]"
       />
-
 <!--      <message-group-->
 <!--        :user="chat.users[0]"-->
 <!--        :texts="[{id: 1, text: 'hjksdhf'}, {id: 1, text: 'Очень длинное сообщение'}]"-->
@@ -36,17 +35,11 @@ import InputForm from '@/components/UI/InputForm.vue'
 import ChatInput from '@/components/UI/ChatInput.vue'
 import MessageGroup from '@/components/UI/MessageGroup.vue'
 import type { PropType } from 'vue'
-//@ts-ignore
-import SockJS from 'sockjs-client/dist/sockjs'
-import { Stomp } from '@stomp/stompjs'
+import stompClient from '@/socket/websocket'
 import type Message from '@/types/Message'
 import type Chat from '@/types/Chat'
 import Api from '@/api'
-const socket = new SockJS('http://192.168.0.102:8080/chat')
-const stompClient = Stomp.over(socket)
-stompClient.connect({}, (frame: any) => {
 
-})
 
 export default defineComponent({
   name: 'ChatContent',
@@ -78,6 +71,10 @@ export default defineComponent({
     }
   },
   methods: {
+    scrollToElement() {
+      const el = document.getElementById('scrollToME')
+      el.scroll(0, 1000000000)
+    },
     fetchUsers() {
       if (!this.chat.id) return
 
@@ -87,10 +84,19 @@ export default defineComponent({
     },
     connect() {
       if (!this.chat.id) return
-      stompClient.subscribe(`/topic/chat/${this.chat.id}`, (messageOutput: any) => {
-        const msg: Message = JSON.parse(messageOutput.body)
-        this.msgs.push(msg)
-      })
+      if (stompClient.connected) {
+        stompClient.subscribe(`/topic/chat/${this.chat.id}`, (messageOutput: any) => {
+          const msg: Message = JSON.parse(messageOutput.body)
+          this.msgs.push(msg)
+        })
+      } else {
+        stompClient.connect({}, (frame: any) => {
+          stompClient.subscribe(`/topic/chat/${this.chat.id}`, (messageOutput: any) => {
+            const msg: Message = JSON.parse(messageOutput.body)
+            this.msgs.push(msg)
+          })
+        })
+      }
     },
     sendMessage() {
       stompClient.send(`/api/chat/${this.chat.id}`, {}, JSON.stringify({
@@ -99,11 +105,13 @@ export default defineComponent({
           token: this.$store.getters['auth/userToken']
         }
       }))
+      this.scrollToElement()
       this.text = ''
     },
     fetchMessages() {
       return Api.getMessages(this.chat.id, this.$store.getters['auth/userToken']).then(data => {
         this.msgs = data
+        this.scrollToElement()
       })
     }
   },
@@ -111,6 +119,7 @@ export default defineComponent({
     this.fetchMessages().then(() => {
       this.fetchUsers()
       this.connect()
+      this.scrollToElement()
     })
   }
 })
